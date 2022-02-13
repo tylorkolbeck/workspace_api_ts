@@ -1,0 +1,39 @@
+{
+  "name": "express-typescript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev ./index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate:make": "knex --knexfile models/dbConfig.ts migrate:make -x ts",
+    "migrate:latest": "knex --knexfile models/dbConfig.ts migrate:latest",
+    "migrate:back": "knex --knexfile models/dbConfig.ts migrate:rollback",
+    "seed:db": "knex --knexfile models/dbConfig.ts seed:run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/express-jwt": "^6.0.4",
+    "prettier": "2.5.1",
+    "ts-node-dev": "^1.1.8"
+  },
+  "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.12",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/node": "^17.0.17",
+    "@types/socket.io": "^3.0.2",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "express-jwt": "^6.1.0",
+    "knex": "^1.0.3",
+    "mysql2": "^2.3.3",
+    "objection": "^3.0.1",
+    "socket.io": "^4.4.1"
+  }
+}
