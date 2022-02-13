@@ -55,11 +55,8 @@ class UserService {
                 }
             }
             return {
-                message: "succes",
-                success: true,
-                data: {
-                    token: "SOME TOKEN",
-                },
+                message: "invalid credentials",
+                success: false,
             };
         } catch (error) {
             console.log(error);

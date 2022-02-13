@@ -10,6 +10,7 @@ class AuthController extends Controller {
             method: Methods.POST,
             handler: this.handleLogin,
             localMiddleware: [
+                // Check if a user account is activated before trying to login
                 async (req: Request, res: Response, next: NextFunction) => {
                     try {
                         const { email } = req.body;
@@ -71,7 +72,8 @@ class AuthController extends Controller {
             const data = await userService.login();
 
             if (data.success) {
-                super.sendSuccess(res, data);
+                console.log(res);
+                super.sendSuccess(res, data.message, data);
             } else {
                 super.sendError(res, data.message);
             }
