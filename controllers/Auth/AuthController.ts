@@ -71,7 +71,11 @@ class AuthController extends Controller {
             const data = await userService.login();
 
             if (data.success) {
-                super.sendSuccess(res, data);
+                const returnData = {
+                    user: data.user,
+                    token: data.jwt,
+                };
+                super.sendSuccess(res, returnData);
             } else {
                 super.sendError(res, data.message);
             }

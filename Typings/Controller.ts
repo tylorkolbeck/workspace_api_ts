@@ -55,11 +55,7 @@ abstract class Controller {
         return this.router;
     };
 
-    protected sendSuccess(
-        res: Response,
-        data: object,
-        message?: string
-    ): Response {
+    protected sendSuccess(res: Response, data: object): Response {
         return res.status(200).json(data);
     }
 

@@ -7,6 +7,8 @@ import Utility from "../../lib/Utilities";
 interface AuthReturnData {
     message: string;
     success: boolean;
+    user?: object;
+    jwt?: string;
     data?: object;
 }
 
@@ -49,17 +51,14 @@ class UserService {
                 );
                 if (isPasswordEqual) {
                     const data = this.prepareData(userFromDb);
-                    return { message: "Logged In", success: true, data };
+                    return { message: "Logged In", success: true, ...data };
                 } else {
                     return { message: "Invalid credentials", success: false };
                 }
             }
             return {
-                message: "succes",
-                success: true,
-                data: {
-                    token: "SOME TOKEN",
-                },
+                message: "invalid credentials",
+                success: false,
             };
         } catch (error) {
             console.log(error);
@@ -149,9 +148,13 @@ class UserService {
     }
 
     private prepareData(user: User): ISafeData {
-        const token = jwt.sign({ id: user.id }, ACCESS_TOKEN_SECRET!, {
-            expiresIn: "30d",
-        });
+        const token = jwt.sign(
+            { id: user.id, email: user.email },
+            ACCESS_TOKEN_SECRET!,
+            {
+                expiresIn: "30d",
+            }
+        );
         const data: ISafeData = {
             user: {
                 id: user.id,
