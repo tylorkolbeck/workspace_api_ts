@@ -43,7 +43,7 @@ export default class Token {
                 const { id, email, role } = decoded;
 
                 req.user = {
-                    id,
+                    id: parseInt(id),
                     email,
                     role,
                 };

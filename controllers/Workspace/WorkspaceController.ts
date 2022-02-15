@@ -1,6 +1,8 @@
 import Controller, { Methods } from "../../Typings/Controller";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import Token from "../../services/TokenService/TokenService";
+import Workspace from "../../models/WorkspaceModel/WorkspaceModel";
+import JSONResponse from "../../Typings/JSONResponse";
 
 class WorkspaceController extends Controller {
     path = "/workspaces";
@@ -17,11 +19,29 @@ class WorkspaceController extends Controller {
         super();
     }
 
-    async handleGetWorkspaces(req: Request, res: Response): Promise<void> {
+    private async handleGetWorkspaces(
+        req: Request,
+        res: Response
+    ): Promise<void> {
         try {
-            super.sendSuccess(res, "got workspaces", {
-                message: "GETTING WORKSPACES",
-            });
+            const ownedWorkspace: any = await Workspace.query()
+                .where({
+                    user_id: req.user.id,
+                })
+                .withGraphFetched("users(safeUserData)")
+                .modifiers({
+                    safeUserData(builder) {
+                        builder.select(
+                            "name",
+                            "email",
+                            "users.id",
+                            "users.created_at"
+                        );
+                    },
+                });
+
+            // const joinedWorspaces: get workspaces that this user is a part of here
+            JSONResponse.SendSuccess(res, "Owned workspaces", ownedWorkspace);
         } catch (error) {
             console.log(error);
         }
