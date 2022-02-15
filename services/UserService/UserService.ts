@@ -3,6 +3,8 @@ import * as bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET } from "../../config";
 import Utility from "../../lib/Utilities";
+import { NextFunction, Response, Request } from "express";
+import JSONResponse from "../../Typings/JSONResponse";
 
 interface AuthReturnData {
     message: string;
@@ -100,6 +102,31 @@ class UserService {
         }
     }
 
+    // Static Middleware function to check if a users account is activated
+    static async IsActivated(req: Request, res: Response, next: NextFunction) {
+        try {
+            const { email } = req.body;
+            if (!email) {
+                JSONResponse.SendError(res, "Missing email or password", null);
+            }
+
+            const user: User | null = await UserService.GetUser({
+                email: email,
+            });
+
+            if (!user) {
+                JSONResponse.SendError(res, "invalid credentials", null);
+            } else if (user && user.activated) {
+                next();
+            } else if (!user.activated) {
+                JSONResponse.SendError(res, "Please verify your email", null);
+            }
+        } catch (error) {
+            console.log(error);
+            JSONResponse.SendError(res, "internal server error", null);
+        }
+    }
+
     public static async GetUser(query: IWhereQuery): Promise<User | null> {
         const user = await User.query().where(query).first();
 
@@ -149,7 +176,7 @@ class UserService {
 
     private prepareData(user: User): ISafeData {
         const token = jwt.sign(
-            { id: user.id, email: user.email },
+            { id: user.id, email: user.email, role: user.role },
             ACCESS_TOKEN_SECRET!,
             {
                 expiresIn: "30d",

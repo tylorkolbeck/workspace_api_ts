@@ -9,35 +9,7 @@ class AuthController extends Controller {
             path: "/login",
             method: Methods.POST,
             handler: this.handleLogin,
-            localMiddleware: [
-                async (req: Request, res: Response, next: NextFunction) => {
-                    try {
-                        const { email } = req.body;
-                        if (!email) {
-                            super.sendError(
-                                res,
-                                "Missing required fields: email, password"
-                            );
-                            return;
-                        }
-                        const user = await UserService.GetUser({
-                            email: req.body.email,
-                        });
-                        if (user && user.activated) {
-                            next();
-                        } else {
-                            super.sendError(
-                                res,
-                                "Please first activate your account to sign in"
-                            );
-                        }
-                    } catch (error) {
-                        console.log(error);
-                        super.sendError(res, "internal server error");
-                        return;
-                    }
-                },
-            ],
+            localMiddleware: [UserService.IsActivated],
         },
         {
             path: "/register",
@@ -71,11 +43,8 @@ class AuthController extends Controller {
             const data = await userService.login();
 
             if (data.success) {
-                const returnData = {
-                    user: data.user,
-                    token: data.jwt,
-                };
-                super.sendSuccess(res, returnData);
+                console.log(res);
+                super.sendSuccess(res, data.message, data);
             } else {
                 super.sendError(res, data.message);
             }
@@ -103,7 +72,7 @@ class AuthController extends Controller {
             const data = await userService.register();
 
             if (data.success) {
-                super.sendSuccess(res, data);
+                super.sendSuccess(res, "Account registered", data);
             } else {
                 super.sendError(res, data.message);
             }
@@ -122,7 +91,7 @@ class AuthController extends Controller {
                 const data = await UserService.ActivateUserAccount(
                     confirmationCode
                 );
-                super.sendSuccess(res, data);
+                super.sendSuccess(res, "Account Activated", data);
             }
         } catch (error) {
             console.log(error);

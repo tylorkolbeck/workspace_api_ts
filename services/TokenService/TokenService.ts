@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-// import { ISafeUser}
 import { ACCESS_TOKEN_SECRET } from "../../config";
 
 export default class Token {
@@ -38,13 +37,16 @@ export default class Token {
                 });
                 return;
             } else {
-                const decoded = <{ user: object }>decodedFromToken;
-                const decodedUser = decoded.user;
-                console.log(decoded);
+                const decoded = <{ id: string; email: string; role: string }>(
+                    decodedFromToken
+                );
+                const { id, email, role } = decoded;
 
-                console.log(">>>>", decodedUser);
-
-                req.user = decodedUser;
+                req.user = {
+                    id,
+                    email,
+                    role,
+                };
                 next();
             }
         });

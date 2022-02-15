@@ -19,8 +19,9 @@ class WorkspaceController extends Controller {
 
     async handleGetWorkspaces(req: Request, res: Response): Promise<void> {
         try {
-            console.log(">>>>", req.user);
-            super.sendSuccess(res, { message: "GETTING WORKSPACES" });
+            super.sendSuccess(res, "got workspaces", {
+                message: "GETTING WORKSPACES",
+            });
         } catch (error) {
             console.log(error);
         }
