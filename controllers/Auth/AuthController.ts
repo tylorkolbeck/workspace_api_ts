@@ -1,5 +1,5 @@
 import Controller, { Methods } from "../../Typings/Controller";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import UserService from "../../services/UserService/UserService";
 
 class AuthController extends Controller {
@@ -43,7 +43,6 @@ class AuthController extends Controller {
             const data = await userService.login();
 
             if (data.success) {
-                console.log(res);
                 super.sendSuccess(res, data.message, data);
             } else {
                 super.sendError(res, data.message);
@@ -62,7 +61,6 @@ class AuthController extends Controller {
                     res,
                     "Missing required fields: email, password, name"
                 );
-                return;
             }
             const userService: UserService = new UserService(
                 email,
@@ -81,12 +79,11 @@ class AuthController extends Controller {
         }
     }
 
-    async handleActivate(req: Request, res: Response) {
+    async handleActivate(req: Request, res: Response): Promise<void> {
         try {
             const confirmationCode = req.query.confirmationCode as string;
             if (!confirmationCode) {
                 super.sendError(res, "No confirmation code provided");
-                return;
             } else {
                 const data = await UserService.ActivateUserAccount(
                     confirmationCode

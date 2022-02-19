@@ -1,5 +1,4 @@
-// import { Model } from "objection";
-import { Model } from "objection";
+import { AnyQueryBuilder, Model, Modifiers } from "objection";
 
 class User extends Model {
     id!: number;
@@ -29,6 +28,11 @@ class User extends Model {
     static jsonSchema = {
         type: "object",
         required: ["password", "email"],
+    };
+    static modifiers: Modifiers<AnyQueryBuilder> = {
+        safeUserPublic(query) {
+            query.select("name", "email", "users.id", "users.created_at");
+        },
     };
 }
 

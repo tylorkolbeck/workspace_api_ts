@@ -1,4 +1,5 @@
 import { Model } from "objection";
+var path = require("path");
 
 class WorkspaceUser extends Model {
     id!: number;
@@ -22,6 +23,32 @@ class WorkspaceUser extends Model {
 
     static jsonSchema = {
         type: "object",
+    };
+
+    static relationMappings = () => {
+        return {
+            // users: {
+            //     relation: Model.HasManyRelation,
+            //     modelClass: path.join(
+            //         __dirname,
+            //         "..",
+            //         "UserModel",
+            //         "UserModel"
+            //     ),
+            //     join: {
+            //         from: "workspace_user.user_id",
+            //         to: "users.id",
+            //     },
+            // },
+            workspace_info: {
+                relation: Model.HasOneRelation,
+                modelClass: path.join(__dirname, "WorkspaceModel"),
+                join: {
+                    from: "workspace_user.workspace_id",
+                    to: "workspaces.id",
+                },
+            },
+        };
     };
 }
 

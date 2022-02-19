@@ -35,7 +35,6 @@ export default class Token {
                         },
                     },
                 });
-                return;
             } else {
                 const decoded = <{ id: string; email: string; role: string }>(
                     decodedFromToken

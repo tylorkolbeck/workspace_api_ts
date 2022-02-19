@@ -1,7 +1,5 @@
 import { Model, RelationMappings, RelationMappingsThunk } from "objection";
-// import WorkspaceUser from "./WorkspaceUser.model";
 var path = require("path");
-// import UserModel from "../UserModel/UserModel";
 
 class Workspace extends Model {
     id!: number;
@@ -31,7 +29,6 @@ class Workspace extends Model {
         return {
             users: {
                 relation: Model.ManyToManyRelation,
-                // modelClass: UserModel,
                 modelClass: path.join(
                     __dirname,
                     "..",
@@ -44,6 +41,19 @@ class Workspace extends Model {
                         from: "workspace_user.workspace_id",
                         to: "workspace_user.user_id",
                     },
+                    to: "users.id",
+                },
+            },
+            owner: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: path.join(
+                    __dirname,
+                    "..",
+                    "UserModel",
+                    "UserModel"
+                ),
+                join: {
+                    from: "workspaces.user_id",
                     to: "users.id",
                 },
             },

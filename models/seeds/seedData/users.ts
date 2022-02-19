@@ -26,4 +26,13 @@ export const users = [
         confirmationCode: "ABCD1234",
         activated: true,
     },
+    {
+        id: 4,
+        name: "Workspace 3 User",
+        email: "workspace_user3@gmail.com",
+        role: "user",
+        password: "password",
+        confirmationCode: "ABCD123235",
+        activated: true,
+    },
 ];

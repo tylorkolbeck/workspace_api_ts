@@ -5,6 +5,7 @@ import { ACCESS_TOKEN_SECRET } from "../../config";
 import Utility from "../../lib/Utilities";
 import { NextFunction, Response, Request } from "express";
 import JSONResponse from "../../Typings/JSONResponse";
+import { QueryBuilder } from "objection";
 
 interface AuthReturnData {
     message: string;
@@ -18,6 +19,13 @@ interface ISafeUser {
     id: number;
     email: string;
     role: string;
+}
+
+interface ISafePublicUser {
+    id: number;
+    email: string;
+    name: string;
+    created_at: string;
 }
 
 interface ISafeData {
